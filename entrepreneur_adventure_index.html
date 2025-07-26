@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧭 创业者心理罗盘 - 发现你的创业DNA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: radial-gradient(ellipse at top, #1e3a8a 0%, #312e81 50%, #1e1b4b 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 动态粒子背景 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 8s infinite linear;
+        }
+
+        .particle:nth-child(1) { width: 4px; height: 4px; top: 20%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 6px; height: 6px; top: 60%; left: 80%; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 3px; height: 3px; top: 40%; left: 30%; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 5px; height: 5px; top: 80%; left: 60%; animation-delay: 6s; }
+        .particle:nth-child(5) { width: 4px; height: 4px; top: 10%; left: 70%; animation-delay: 1s; }
+        .particle:nth-child(6) { width: 7px; height: 7px; top: 70%; left: 20%; animation-delay: 3s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
+            50% { transform: translateY(-30px) rotate(180deg); opacity: 1; }
+            100% { transform: translateY(0px) rotate(360deg); opacity: 0.8; }
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 950px;
+            width: 95%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(24px);
+        }
+
+        /* 顶部装饰条 */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #06b6d4, #8b5cf6, #f59e0b, #ef4444, #06b6d4);
+            background-size: 400% 100%;
+            animation: gradient-shift 6s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9) 0%, rgba(59, 130, 246, 0.9) 50%, rgba(16, 185, 129, 0.9) 100%);
+            color: white;
+            padding: 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 0deg, rgba(255,255,255,0.1) 90deg, transparent 180deg);
+            animation: rotate-slow 15s linear infinite;
+        }
+
+        @keyframes rotate-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            font-size: 1.4rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 2;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .content {
+            padding: 60px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* 问题容器样式 */
+        .question-container {
+            display: none;
+            animation: slideInFade 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .question-container.active {
+            display: block;
+        }
+
+        @keyframes slideInFade {
+            from { 
+                opacity: 0; 
+                transform: translateY(40px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .scenario-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 35px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+        .scenario-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .scenario-card:hover::before {
+            opacity: 1;
+        }
+
+        .scenario-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .scenario-icon {
+            font-size: 3rem;
+            margin-right: 20px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 6px 12px rgba(139, 92, 246, 0.3)); }
+        }
+
+        .scenario-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            position: relative;
+        }
+
+        .scenario-description {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .scenario-question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            background: rgba(139, 92, 246, 0.2);
+            padding: 20px;
+            border-radius: 16px;
+            border-left: 4px solid #8b5cf6;
+            position: relative;
+        }
+
+        /* 选择卡片样式 */
+        .choices {
+            display: grid;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .choice {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+
+        .choice::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .choice:hover::before {
+            transform: scale(1);
+        }
+
+        .choice:hover {
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(139, 92, 246, 0.2),
+                0 0 0 1px rgba(139, 92, 246, 0.1);
+        }
+
+        .choice.selected {
+            border-color: #10b981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(16, 185, 129, 0.3),
+                0 0 0 1px rgba(16, 185, 129, 0.2);
+        }
+
+        .choice-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .choice-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .choice-emoji {
+            font-size: 2.8rem;
+            margin-right: 20px;
+            animation: float-subtle 4s ease-in-out infinite;
+        }
+
+        @keyframes float-subtle {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .choice-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .choice-description {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            line-height: 1.7;
+            margin-left: 68px;
+        }
+
+        .choice.selected .choice-title {
+            color: #6ee7b7;
+        }
+
+        .choice.selected .choice-description {
+            color: #a7f3d0;
+        }
+
+        /* 进度条样式 */
+        .progress-section {
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #06b6d4 0%, #8b5cf6 50%, #f59e0b 100%);
+            border-radius: 8px;
+            transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 0%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+            animation: progress-shimmer 2s infinite;
+        }
+
+        @keyframes progress-shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 20px;
+            color: #e2e8f0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* 按钮样式 */
+        .next-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 32px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 35px;
+            width: 100%;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .next-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .next-btn:hover::before {
+            left: 100%;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 45px rgba(139, 92, 246, 0.5);
+        }
+
+        .next-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+        }
+
+        /* 结果页面样式 */
+        .result-container {
+            display: none;
+            text-align: center;
+            animation: result-appear 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes result-appear {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .result-avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 50%, #10b981 100%);
+            color: white;
+            box-shadow: 
+                0 25px 50px rgba(139, 92, 246, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            animation: avatar-pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes avatar-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 25px 50px rgba(139, 92, 246, 0.4); }
+            50% { transform: scale(1.08); box-shadow: 0 30px 60px rgba(139, 92, 246, 0.6); }
+        }
+
+        .result-type {
+            font-size: 3rem;
+            color: #f1f5f9;
+            margin-bottom: 15px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .result-subtitle {
+            font-size: 1.5rem;
+            color: #8b5cf6;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .result-desc {
+            font-size: 1.3rem;
+            color: #cbd5e1;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 维度统计样式 */
+        .dimensions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin: 50px 0;
+        }
+
+        .dimension-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dimension-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .dimension-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #06b6d4, #8b5cf6, #f59e0b);
+        }
+
+        .dimension-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .dimension-label {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .dimension-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+
+        .dimension-desc {
+            font-size: 1rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        /* 当前状态分析 */
+        .current-status {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 24px;
+            padding: 35px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .current-status::before {
+            content: '🎯';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 12rem;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .status-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fbbf24;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-content {
+            font-size: 1.2rem;
+            color: #fde68a;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 建议系统 */
+        .recommendations {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 24px;
+            padding: 40px;
+            margin-top: 40px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recommendations::before {
+            content: '💡';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            font-size: 15rem;
+            opacity: 0.03;
+        }
+
+        .recommendations h3 {
+            color: #6ee7b7;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .recommendation-item {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(8px);
+            transition: transform 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            transform: translateX(8px);
+        }
+
+        .rec-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .rec-emoji {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .rec-title {
+            font-weight: 700;
+            color: #a7f3d0;
+            font-size: 1.3rem;
+        }
+
+        .rec-desc {
+            color: #d1fae5;
+            line-height: 1.7;
+            font-size: 1.1rem;
+            margin-left: 50px;
+        }
+
+        /* 行动按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(16, 185, 129, 0.5);
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        .action-btn.secondary:hover {
+            box-shadow: 0 16px 40px rgba(139, 92, 246, 0.5);
+        }
+
+        .action-btn.cta {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.4);
+            font-size: 1.2rem;
+            padding: 20px 40px;
+        }
+
+        .action-btn.cta:hover {
+            box-shadow: 0 16px 40px rgba(245, 158, 11, 0.6);
+        }
+
+        /* 开始页面 */
+        .start-screen {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .start-title {
+            font-size: 3.5rem;
+            color: #f1f5f9;
+            margin-bottom: 25px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .start-subtitle {
+            font-size: 1.5rem;
+            color: #cbd5e1;
+            margin-bottom: 45px;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        .features-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 35px;
+            backdrop-filter: blur(12px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-12px) scale(1.03);
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 15px;
+        }
+
+        .feature-desc {
+            color: #cbd5e1;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 50%, #10b981 100%);
+            color: white;
+            border: none;
+            padding: 25px 60px;
+            border-radius: 40px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 50px;
+            box-shadow: 0 20px 45px rgba(139, 92, 246, 0.5);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .start-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .start-btn:hover::before {
+            left: 100%;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 25px 55px rgba(139, 92, 246, 0.6);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .content {
+                padding: 40px 30px;
+            }
+            
+            .header {
+                padding: 40px 30px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .start-title {
+                font-size: 2.8rem;
+            }
+            
+            .dimensions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .choice-description {
+                margin-left: 0;
+                margin-top: 15px;
+            }
+            
+            .scenario-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .scenario-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 98%;
+                margin: 10px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🧭 创业者心理罗盘</h1>
+            <p>探索你的创业DNA，解锁隐藏潜能</p>
+        </div>
+
+        <div class="content">
+            <!-- 开始界面 -->
+            <div id="start-screen" class="start-screen">
+                <h2 class="start-title">🚀 准备探索你的创业密码？</h2>
+                <p class="start-subtitle">
+                    通过12个精心设计的心理场景测试，<br>
+                    我们将解析你独特的创业DNA组合，<br>
+                    揭示你的压力模式、决策风格和关系处理方式。
+                </p>
+                
+                <div class="features-showcase">
+                    <div class="feature-card">
+                        <span class="feature-icon">🧬</span>
+                        <div class="feature-title">16种创业DNA</div>
+                        <div class="feature-desc">如MBTI般精准，为你匹配专属的创业者类型</div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🎭</span>
+                        <div class="feature-title">场景式测试</div>
+                        <div class="feature-desc">通过隐喻场景，测试你的真实反应模式</div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">📊</span>
+                        <div class="feature-title">四维度分析</div>
+                        <div class="feature-desc">从压力管理到关系处理，全方位状态解析</div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">💎</span>
+                        <div class="feature-title">专业指导</div>
+                        <div class="feature-desc">基于结果的个性化成长方案和实战建议</div>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startTest()">开始探索</button>
+            </div>
+
+            <!-- 问题界面 -->
+            <div id="question-screen" style="display: none;">
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress"></div>
+                    </div>
+                    <div class="progress-text" id="progress-text">第 1 / 12 个场景</div>
+                </div>
+
+                <div id="questions-container"></div>
+
+                <button class="next-btn" id="next-btn" onclick="nextQuestion()" disabled>继续探索 ➡️</button>
+            </div>
+
+            <!-- 结果界面 -->
+            <div id="result-screen" class="result-container">
+                <div class="result-avatar" id="result-avatar">🎯</div>
+                <div class="result-type" id="result-type">创业者类型</div>
+                <div class="result-subtitle" id="result-subtitle">The Entrepreneur</div>
+                <div class="result-desc" id="result-desc">结果描述</div>
+                
+                <div class="current-status" id="current-status">
+                    <!-- 当前状态分析 -->
+                </div>
+                
+                <div class="dimensions-grid" id="dimensions-grid">
+                    <!-- 维度数据 -->
+                </div>
+
+                <div class="recommendations" id="recommendations">
+                    <h3>🎯 你的专属成长密码</h3>
+                    <!-- 建议内容 -->
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="restartTest()">🔄 重新探索</button>
+                    <button class="action-btn secondary" onclick="shareResult()">📤 分享发现</button>
+                    <button class="action-btn cta" onclick="getPersonalGuidance()">🚀 获取专业指导</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 隐喻式心理测试场景
+        const scenarios = [
+            {
+                icon: "🏝️",
+                title: "荒岛求生",
+                description: "你被困在一个荒岛上，资源有限，需要在这里生存下去。你发现岛上还有其他几个人，但大家都很焦虑和恐慌...",
+                question: "面对这种极端压力环境，你的第一反应是？",
+                choices: [
+                    { 
+                        emoji: "🧘", 
+                        title: "冷静分析现状", 
+                        desc: "深呼吸让自己冷静下来，理性分析当前资源和生存需要", 
+                        scores: { stress: 3, decision: 3, relation: 2, execution: 3 },
+                        traits: ["calm", "analytical"]
+                    },
+                    { 
+                        emoji: "👥", 
+                        title: "召集大家讨论", 
+                        desc: "马上组织所有人开会，一起商量生存策略和分工合作", 
+                        scores: { stress: 2, decision: 2, relation: 3, execution: 2 },
+                        traits: ["collaborative", "democratic"]
+                    },
+                    { 
+                        emoji: "⚡", 
+                        title: "立即行动求生", 
+                        desc: "不管其他人，马上开始寻找水源和食物，先保证自己生存", 
+                        scores: { stress: 2, decision: 3, relation: 1, execution: 3 },
+                        traits: ["action-oriented", "independent"]
+                    },
+                    { 
+                        emoji: "😰", 
+                        title: "感到压力巨大", 
+                        desc: "被眼前的困境压垮，需要时间消化这个现实", 
+                        scores: { stress: 1, decision: 1, relation: 2, execution: 1 },
+                        traits: ["sensitive", "overwhelmed"]
+                    }
+                ]
+            },
+            {
+                icon: "🌉",
+                title: "过河难题",
+                description: "你需要带领团队渡过一条湍急的河流。河上有一座看起来不太稳固的桥，也可以选择绕路，但会耗费很多时间。团队中有人害怕，有人急躁...",
+                question: "面对风险与效率的权衡，你会？",
+                choices: [
+                    { 
+                        emoji: "📊", 
+                        title: "详细评估风险", 
+                        desc: "仔细检查桥的结构，评估每个选项的风险和收益", 
+                        scores: { stress: 3, decision: 3, relation: 2, execution: 2 },
+                        traits: ["analytical", "cautious"]
+                    },
+                    { 
+                        emoji: "🤝", 
+                        title: "征求团队意见", 
+                        desc: "组织团队讨论，听取每个人的想法和担忧", 
+                        scores: { stress: 2, decision: 2, relation: 3, execution: 2 },
+                        traits: ["collaborative", "democratic"]
+                    },
+                    { 
+                        emoji: "🚀", 
+                        title: "果断选择过桥", 
+                        desc: "相信自己的判断，带头过桥，用行动鼓励团队", 
+                        scores: { stress: 2, decision: 3, relation: 2, execution: 3 },
+                        traits: ["decisive", "leadership"]
+                    },
+                    { 
+                        emoji: "🛡️", 
+                        title: "选择安全绕路", 
+                        desc: "宁可多花时间，也要确保团队所有人的安全", 
+                        scores: { stress: 1, decision: 2, relation: 3, execution: 1 },
+                        traits: ["cautious", "protective"]
+                    }
+                ]
+            },
+            {
+                icon: "🏰",
+                title: "城堡防御",
+                description: "你是一座城堡的守护者，敌军即将来犯。城堡里的居民都指望着你的决策。你必须在固守待援、主动出击、或者谈判求和之间做选择...",
+                question: "在这种高压决策时刻，你的策略是？",
+                choices: [
+                    { 
+                        emoji: "🛡️", 
+                        title: "固守城堡", 
+                        desc: "利用城堡的防御优势，等待援军到来", 
+                        scores: { stress: 2, decision: 2, relation: 2, execution: 2 },
+                        traits: ["defensive", "patient"]
+                    },
+                    { 
+                        emoji: "⚔️", 
+                        title: "主动出击", 
+                        desc: "趁敌军立足未稳，主动出击打乱他们的部署", 
+                        scores: { stress: 3, decision: 3, relation: 1, execution: 3 },
+                        traits: ["aggressive", "bold"]
+                    },
+                    { 
+                        emoji: "🤝", 
+                        title: "尝试谈判", 
+                        desc: "派遣使者与敌军谈判，寻求和平解决方案", 
+                        scores: { stress: 2, decision: 2, relation: 3, execution: 2 },
+                        traits: ["diplomatic", "peaceful"]
+                    },
+                    { 
+                        emoji: "📊", 
+                        title: "收集情报", 
+                        desc: "先详细了解敌军实力和意图，再制定应对策略", 
+                        scores: { stress: 1, decision: 1, relation: 2, execution: 1 },
+                        traits: ["analytical", "cautious"]
+                    }
+                ]
+            },
+            {
+                icon: "🌟",
+                title: "魔法学院",
+                description: "你在一所魔法学院学习，即将面临一个重要的考试。但你发现自己还有很多不懂的地方，同时朋友们都在向你求助...",
+                question: "面对学习压力和人际关系的平衡，你会？",
+                choices: [
+                    { 
+                        emoji: "📚", 
+                        title: "专注自己学习", 
+                        desc: "先把自己的学习搞好，暂时减少社交活动", 
+                        scores: { stress: 2, decision: 3, relation: 1, execution: 3 },
+                        traits: ["focused", "self-oriented"]
+                    },
+                    { 
+                        emoji: "👥", 
+                        title: "组织学习小组", 
+                        desc: "建立学习小组，大家一起讨论和相互帮助", 
+                        scores: { stress: 2, decision: 2, relation: 3, execution: 2 },
+                        traits: ["collaborative", "social"]
+                    },
+                    { 
+                        emoji: "⚖️", 
+                        title: "合理分配时间", 
+                        desc: "制定详细计划，在学习和帮助朋友之间找平衡", 
+                        scores: { stress: 3, decision: 3, relation: 2, execution: 3 },
+                        traits: ["organized", "balanced"]
+                    },
+                    { 
+                        emoji: "😰", 
+                        title: "感到焦虑困扰", 
+                        desc: "被各种压力搞得焦头烂额，不知该如何处理", 
+                        scores: { stress: 1, decision: 1, relation: 2, execution: 1 },
+                        traits: ["overwhelmed", "sensitive"]
+                    }
+                ]
+            },
+            {
+                icon: "🎭",
+                title: "戏剧舞台",
+                description: "你是剧团的导演，明天就要首演了。但主角突然生病，替补演员还不够熟练，观众已经买票期待着...",
+                question: "面对这个突发危机，你的处理方式是？",
+                choices: [
+                    { 
+                        emoji: "🎪", 
+                        title: "紧急调整剧本", 
+                        desc: "修改剧本适应替补演员，降低演出难度", 
+                        scores: { stress: 3, decision: 3, relation: 2, execution: 3 },
+                        traits: ["adaptive", "creative"]
+                    },
+                    { 
+                        emoji: "⏰", 
+                        title: "延期演出", 
+                        desc: "向观众说明情况，延期到主角康复", 
+                        scores: { stress: 1, decision: 2, relation: 3, execution: 1 },
+                        traits: ["honest", "conservative"]
+                    },
+                    { 
+                        emoji: "💪", 
+                        title: "强化训练", 
+                        desc: "加班加点训练替补演员，确保演出质量", 
+                        scores: { stress: 2, decision: 2, relation: 1, execution: 3 },
+                        traits: ["persistent", "demanding"]
+                    },
+                    { 
+                        emoji: "👥", 
+                        title: "征求团队意见", 
+                        desc: "召集所有演员和工作人员讨论最佳方案", 
+                        scores: { stress: 2, decision: 1, relation: 3, execution: 2 },
+                        traits: ["democratic", "collaborative"]
+                    }
+                ]
+            },
+            {
+                icon: "🏔️",
+                title: "登山探险",
+                description: "你正在带队攀登一座高峰，天气突然变坏，继续前进有风险，但退回去意味着失去这次难得的机会...",
+                question: "在风险与机会面前，你的决策依据是？",
+                choices: [
+                    { 
+                        emoji: "🌤️", 
+                        title: "等待天气转好", 
+                        desc: "在安全地点等待，直到天气条件允许", 
+                        scores: { stress: 1, decision: 2, relation: 3, execution: 1 },
+                        traits: ["patient", "cautious"]
+                    },
+                    { 
+                        emoji: "📡", 
+                        title: "收集更多信息", 
+                        desc: "联系气象台，详细了解天气变化趋势", 
+                        scores: { stress: 2, decision: 3, relation: 2, execution: 2 },
+                        traits: ["analytical", "prepared"]
+                    },
+                    { 
+                        emoji: "🎯", 
+                        title: "按原计划继续", 
+                        desc: "相信团队能力和准备，继续向山顶前进", 
+                        scores: { stress: 3, decision: 3, relation: 1, execution: 3 },
+                        traits: ["bold", "confident"]
+                    },
+                    { 
+                        emoji: "🗳️", 
+                        title: "团队投票决定", 
+                        desc: "让每个队员投票，用民主方式做决定", 
+                        scores: { stress: 2, decision: 1, relation: 3, execution: 2 },
+                        traits: ["democratic", "shared-responsibility"]
+                    }
+                ]
+            },
+            {
+                icon: "🏺",
+                title: "宝藏猎人",
+                description: "你在寻找传说中的宝藏，终于找到了藏宝地点。但发现这里还有其他猎人，而且宝藏的数量有限...",
+                question: "面对竞争和稀缺资源，你会？",
+                choices: [
+                    { 
+                        emoji: "🤝", 
+                        title: "提议合作分享", 
+                        desc: "建议大家一起挖掘，按贡献分配宝藏", 
+                        scores: { stress: 2, decision: 2, relation: 3, execution: 2 },
+                        traits: ["cooperative", "fair"]
+                    },
+                    { 
+                        emoji: "🏃", 
+                        title: "抢先独自行动", 
+                        desc: "趁其他人还在犹豫，快速开始挖掘", 
+                        scores: { stress: 3, decision: 3, relation: 1, execution: 3 },
+                        traits: ["competitive", "quick"]
+                    },
+                    { 
+                        emoji: "🕵️", 
+                        title: "观察等待时机", 
+                        desc: "先观察其他人的行动，寻找最佳介入时机", 
+                        scores: { stress: 2, decision: 2, relation: 2, execution: 2 },
+                        traits: ["strategic", "patient"]
+                    },
+                    { 
+                        emoji: "💭", 
+                        title: "寻找另一处", 
+                        desc: "避免冲突，继续寻找其他可能的宝藏地点", 
+                        scores: { stress: 1, decision: 2, relation: 1, execution: 2 },
+                        traits: ["conflict-avoidant", "independent"]
+                    }
+                ]
+            },
+            {
+                icon: "🎨",
+                title: "艺术创作",
+                description: "你正在创作一件重要的艺术作品，但创作过程中遇到了瓶颈。同时，朋友们对你的作品有不同的意见和建议...",
+                question: "在创作困境中，你会如何寻求突破？",
+                choices: [
+                    { 
+                        emoji: "🔍", 
+                        title: "独自深入思考", 
+                        desc: "关掉所有外界干扰，静心寻找灵感", 
+                        scores: { stress: 2, decision: 3, relation: 1, execution: 2 },
+                        traits: ["introspective", "independent"]
+                    },
+                    { 
+                        emoji: "💬", 
+                        title: "广泛收集意见", 
+                        desc: "主动向更多人请教，收集各种观点和建议", 
+                        scores: { stress: 2, decision: 2, relation: 3, execution: 2 },
+                        traits: ["open-minded", "social"]
+                    },
+                    { 
+                        emoji: "🎲", 
+                        title: "尝试全新方向", 
+                        desc: "大胆尝试之前没想过的创作方向", 
+                        scores: { stress: 3, decision: 3, relation: 1, execution: 3 },
+                        traits: ["innovative", "risk-taking"]
+                    },
+                    { 
+                        emoji: "📚", 
+                        title: "研究经典作品", 
+                        desc: "回到基础，研究大师的作品寻找启发", 
+                        scores: { stress: 1, decision: 2, relation: 2, execution: 2 },
+                        traits: ["methodical", "respectful"]
+                    }
+                ]
+            },
+            {
+                icon: "🚢",
+                title: "船长航海",
+                description: "你是船长，正在带领船员穿越危险海域。突然遇到暴风雨，船员们开始恐慌，有人建议改变航向，有人坚持原计划...",
+                question: "作为领导者，你如何维持团队稳定？",
+                choices: [
+                    { 
+                        emoji: "📢", 
+                        title: "召开紧急会议", 
+                        desc: "立即召集所有船员，公开讨论应对方案", 
+                        scores: { stress: 2, decision: 2, relation: 3, execution: 2 },
+                        traits: ["transparent", "democratic"]
+                    },
+                    { 
+                        emoji: "⚓", 
+                        title: "果断下达命令", 
+                        desc: "基于经验快速决策，要求所有人执行", 
+                        scores: { stress: 3, decision: 3, relation: 1, execution: 3 },
+                        traits: ["authoritative", "decisive"]
+                    },
+                    { 
+                        emoji: "🧭", 
+                        title: "分析各种选项", 
+                        desc: "仔细评估每个方案的利弊，理性决策", 
+                        scores: { stress: 2, decision: 3, relation: 2, execution: 2 },
+                        traits: ["analytical", "thorough"]
+                    },
+                    { 
+                        emoji: "💪", 
+                        title: "鼓舞团队士气", 
+                        desc: "先稳定船员情绪，增强大家的信心", 
+                        scores: { stress: 1, decision: 2, relation: 3, execution: 2 },
+                        traits: ["inspirational", "supportive"]
+                    }
+                ]
+            },
+            {
+                icon: "🌺",
+                title: "花园管理",
+                description: "你负责管理一个大花园，不同区域的植物有不同需求。最近发现一些植物生长不良，同时还要应对季节变化...",
+                question: "面对复杂系统的管理，你的方法是？",
+                choices: [
+                    { 
+                        emoji: "📋", 
+                        title: "制定详细计划", 
+                        desc: "为每个区域制定具体的护理计划和时间表", 
+                        scores: { stress: 2, decision: 3, relation: 2, execution: 3 },
+                        traits: ["systematic", "organized"]
+                    },
+                    { 
+                        emoji: "👥", 
+                        title: "分工合作", 
+                        desc: "组织团队，让每个人负责自己最擅长的区域", 
+                        scores: { stress: 2, decision: 2, relation: 3, execution: 2 },
+                        traits: ["collaborative", "delegating"]
+                    },
+                    { 
+                        emoji: "🔄", 
+                        title: "灵活调整", 
+                        desc: "根据实际情况随时调整策略，保持灵活性", 
+                        scores: { stress: 3, decision: 2, relation: 2, execution: 2 },
+                        traits: ["adaptive", "flexible"]
+                    },
+                    { 
+                        emoji: "📖", 
+                        title: "学习专业知识", 
+                        desc: "深入研究植物学，提升专业管理能力", 
+                        scores: { stress: 1, decision: 2, relation: 1, execution: 2 },
+                        traits: ["studious", "perfectionist"]
+                    }
+                ]
+            },
+            {
+                icon: "🎪",
+                title: "马戏团表演",
+                description: "你是马戏团的主要表演者，今晚有重要演出。但练习时你发现自己状态不佳，而观众对你期望很高...",
+                question: "面对表现压力，你会如何调整？",
+                choices: [
+                    { 
+                        emoji: "🧘", 
+                        title: "冥想调整状态", 
+                        desc: "用冥想和呼吸练习来调整心理状态", 
+                        scores: { stress: 3, decision: 2, relation: 1, execution: 2 },
+                        traits: ["mindful", "self-regulating"]
+                    },
+                    { 
+                        emoji: "🏋️", 
+                        title: "加强训练", 
+                        desc: "通过额外练习来提升表演的把握性", 
+                        scores: { stress: 2, decision: 2, relation: 1, execution: 3 },
+                        traits: ["hardworking", "persistent"]
+                    },
+                    { 
+                        emoji: "🤝", 
+                        title: "寻求团队支持", 
+                        desc: "和其他表演者交流，获得鼓励和建议", 
+                        scores: { stress: 2, decision: 2, relation: 3, execution: 2 },
+                        traits: ["social", "supportive"]
+                    },
+                    { 
+                        emoji: "🎭", 
+                        title: "调整表演内容", 
+                        desc: "根据当前状态适当调整表演难度", 
+                        scores: { stress: 2, decision: 3, relation: 2, execution: 2 },
+                        traits: ["adaptive", "realistic"]
+                    }
+                ]
+            },
+            {
+                icon: "🏛️",
+                title: "古代智者",
+                description: "你是古代的一位智者，国王向你请教如何治理国家。面对复杂的政治局面和民众需求，你需要给出建议...",
+                question: "面对复杂决策，你依赖什么来指导？",
+                choices: [
+                    { 
+                        emoji: "📜", 
+                        title: "历史经验", 
+                        desc: "研究历史上类似情况的处理方法", 
+                        scores: { stress: 2, decision: 3, relation: 2, execution: 2 },
+                        traits: ["traditional", "cautious"]
+                    },
+                    { 
+                        emoji: "👂", 
+                        title: "倾听民意", 
+                        desc: "深入民间了解百姓的真实想法和需求", 
+                        scores: { stress: 2, decision: 2, relation: 3, execution: 2 },
+                        traits: ["empathetic", "democratic"]
+                    },
+                    { 
+                        emoji: "🔮", 
+                        title: "直觉洞察", 
+                        desc: "相信内在智慧和直觉指引", 
+                        scores: { stress: 1, decision: 1, relation: 2, execution: 1 },
+                        traits: ["intuitive", "spiritual"]
+                    },
+                    { 
+                        emoji: "⚖️", 
+                        title: "平衡各方利益", 
+                        desc: "寻找能让各方都接受的中庸之道", 
+                        scores: { stress: 3, decision: 3, relation: 3, execution: 3 },
+                        traits: ["diplomatic", "balanced"]
+                    }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+        let scores = { stress: 0, decision: 0, relation: 0, execution: 0 };
+        let traits = [];
+
+        function startTest() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('question-screen').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const container = document.getElementById('questions-container');
+            const scenario = scenarios[currentQuestion];
+            
+            container.innerHTML = `
+                <div class="question-container active">
+                    <div class="scenario-card">
+                        <div class="scenario-header">
+                            <span class="scenario-icon">${scenario.icon}</span>
+                            <div class="scenario-title">${scenario.title}</div>
+                        </div>
+                        <div class="scenario-description">${scenario.description}</div>
+                        <div class="scenario-question">${scenario.question}</div>
+                    </div>
+                    <div class="choices" id="choices">
+                        ${scenario.choices.map((choice, index) => `
+                            <div class="choice" onclick="selectChoice(${index})">
+                                <div class="choice-content">
+                                    <div class="choice-header">
+                                        <span class="choice-emoji">${choice.emoji}</span>
+                                        <div class="choice-title">${choice.title}</div>
+                                    </div>
+                                    <div class="choice-description">${choice.desc}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            updateProgress();
+        }
+
+        function selectChoice(choiceIndex) {
+            // 清除之前的选择
+            document.querySelectorAll('.choice').forEach(choice => {
+                choice.classList.remove('selected');
+            });
+            
+            // 标记当前选择
+            document.querySelectorAll('.choice')[choiceIndex].classList.add('selected');
+            
+            // 保存答案
+            answers[currentQuestion] = choiceIndex;
+            
+            // 计算分数和特质
+            const choice = scenarios[currentQuestion].choices[choiceIndex];
+            Object.keys(choice.scores).forEach(key => {
+                scores[key] += choice.scores[key];
+            });
+            
+            // 记录特质
+            traits.push(...choice.traits);
+            
+            // 启用下一题按钮
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestion] === undefined) return;
+            
+            currentQuestion++;
+            
+            if (currentQuestion >= scenarios.length) {
+                showResults();
+            } else {
+                showQuestion();
+                document.getElementById('next-btn').disabled = true;
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / scenarios.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `第 ${currentQuestion + 1} / ${scenarios.length} 个场景`;
+        }
+
+        function showResults() {
+            document.getElementById('question-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            
+            // 计算创业者类型
+            const type = calculateEntrepreneurType(scores, traits);
+            
+            // 显示结果
+            document.getElementById('result-avatar').textContent = type.avatar;
+            document.getElementById('result-type').textContent = type.name;
+            document.getElementById('result-subtitle').textContent = type.code;
+            document.getElementById('result-desc').textContent = type.description;
+            
+            // 显示当前状态分析
+            showCurrentStatus(type, scores);
+            
+            // 显示维度分析
+            showDimensions(scores);
+            
+            // 显示建议
+            showRecommendations(type, scores);
+        }
+
+        function calculateEntrepreneurType(scores, traits) {
+            // 基于四个维度计算类型
+            const avgStress = scores.stress / scenarios.length;
+            const avgDecision = scores.decision / scenarios.length;
+            const avgRelation = scores.relation / scenarios.length;
+            const avgExecution = scores.execution / scenarios.length;
+            
+            // 16种创业者类型组合
+            const types = {
+                "CALM_ANALYTICAL_COLLABORATIVE_SYSTEMATIC": {
+                    avatar: "🧠",
+                    name: "战略思考家",
+                    code: "CACS-型",
+                    description: "你是天生的战略家，擅长在复杂环境中保持冷静，用理性分析指导决策。你重视团队合作，善于构建系统化的解决方案。在创业路上，你是那个能在暴风雨中掌舵的船长。"
+                },
+                "CALM_ANALYTICAL_INDEPENDENT_FLEXIBLE": {
+                    avatar: "⚡",
+                    name: "独立分析师",
+                    code: "CAIF-型",
+                    description: "你拥有强大的内在力量，能够独立思考和快速适应变化。你用数据说话，但不拘泥于条条框框。你是那种能在混乱中找到秩序，在变化中发现机会的创业者。"
+                },
+                "PASSIONATE_INTUITIVE_COLLABORATIVE_SYSTEMATIC": {
+                    avatar: "🔥",
+                    name: "激情领导者",
+                    code: "PICS-型",
+                    description: "你是团队的精神领袖，用激情点燃他人的梦想。你相信直觉的力量，善于调动团队情绪，并能将激情转化为有序的行动。你是那种能让整个团队为共同目标燃烧的创业者。"
+                },
+                "CALM_INTUITIVE_COLLABORATIVE_FLEXIBLE": {
+                    avatar: "🌊",
+                    name: "和谐协调者",
+                    code: "CICF-型",
+                    description: "你是天然的协调者，能在混乱中创造和谐。你用直觉感知团队需求，善于灵活调整策略。你的创业风格如流水般温和而坚韧，最终能穿透最坚硬的岩石。"
+                },
+                "PASSIONATE_ANALYTICAL_INDEPENDENT_SYSTEMATIC": {
+                    avatar: "🚀",
+                    name: "火箭推进器",
+                    code: "PAIS-型",
+                    description: "你是创业界的火箭，有着强烈的目标导向和系统化的执行力。你用数据验证激情，用激情驱动执行。你是那种能把不可能变成可能的创业者。"
+                },
+                "CALM_ANALYTICAL_INDEPENDENT_SYSTEMATIC": {
+                    avatar: "🏗️",
+                    name: "系统建造师",
+                    code: "CAIS-型",
+                    description: "你是企业的建筑师，擅长构建稳固的商业体系。你冷静理性，独立思考，能够设计出经得起时间考验的商业模式。你的创业就像建造大厦，每一块砖都经过精心计算。"
+                },
+                "PASSIONATE_INTUITIVE_INDEPENDENT_FLEXIBLE": {
+                    avatar: "🎨",
+                    name: "创新艺术家",
+                    code: "PIIF-型",
+                    description: "你是创业界的艺术家，用直觉创造独特的商业价值。你不走寻常路，善于在变化中寻找灵感。你的创业充满创意和惊喜，总能给市场带来新鲜的体验。"
+                },
+                "CALM_INTUITIVE_INDEPENDENT_SYSTEMATIC": {
+                    avatar: "🧘",
+                    name: "哲学思考者",
+                    code: "CIIS-型",
+                    description: "你是有哲学思维的创业者，能在浮躁的商业世界中保持内心的宁静。你用直觉洞察商业本质，用系统思维构建长期价值。你的创业之路虽然孤独，但充满智慧。"
+                },
+                "PASSIONATE_ANALYTICAL_COLLABORATIVE_FLEXIBLE": {
+                    avatar: "⚡",
+                    name: "敏捷冲锋手",
+                    code: "PACF-型",
+                    description: "你是团队的冲锋号，既有激情又有理性。你善于调动团队力量，在快速变化的市场中敏捷应对。你的创业风格是：快速试错，团队协作，数据驱动。"
+                },
+                "OVERWHELMED_INTUITIVE_COLLABORATIVE_FLEXIBLE": {
+                    avatar: "🌱",
+                    name: "成长探索者",
+                    code: "OICF-型",
+                    description: "你是一颗正在发芽的种子，虽然现在可能感到压力，但你有着巨大的成长潜力。你善于感知他人需求，重视团队关系，正在学习如何将直觉转化为商业价值。"
+                },
+                "OVERWHELMED_ANALYTICAL_COLLABORATIVE_SYSTEMATIC": {
+                    avatar: "💎",
+                    name: "潜力钻石",
+                    code: "OACS-型",
+                    description: "你像一颗未经雕琢的钻石，有着分析问题和系统思考的天赋，重视团队合作。现在的压力是成长的催化剂，经过打磨后，你将绽放出耀眼的光芒。"
+                },
+                "CALM_DECISION_RELATION_EXECUTION": {
+                    avatar: "👑",
+                    name: "全能领袖",
+                    code: "CDRE-型",
+                    description: "你是天生的领袖，在各个维度都表现出色。你能在压力下保持冷静，做出明智决策，维护团队关系，并高效执行。你是那种能带领团队走向成功的全能型创业者。"
+                }
+            };
+            
+            // 简化的类型匹配逻辑
+            if (avgStress >= 2.5 && avgDecision >= 2.5 && avgRelation >= 2.5 && avgExecution >= 2.5) {
+                return types["CALM_DECISION_RELATION_EXECUTION"];
+            } else if (avgStress >= 2.5 && avgDecision >= 2.5) {
+                if (avgRelation >= 2.5) {
+                    return types["CALM_ANALYTICAL_COLLABORATIVE_SYSTEMATIC"];
+                } else {
+                    return types["CALM_ANALYTICAL_INDEPENDENT_SYSTEMATIC"];
+                }
+            } else if (avgRelation >= 2.5 && avgExecution >= 2.5) {
+                return types["PASSIONATE_ANALYTICAL_COLLABORATIVE_FLEXIBLE"];
+            } else if (avgStress < 1.8) {
+                if (avgRelation >= 2.5) {
+                    return types["OVERWHELMED_INTUITIVE_COLLABORATIVE_FLEXIBLE"];
+                } else {
+                    return types["OVERWHELMED_ANALYTICAL_COLLABORATIVE_SYSTEMATIC"];
+                }
+            } else if (traits.includes("creative") || traits.includes("innovative")) {
+                return types["PASSIONATE_INTUITIVE_INDEPENDENT_FLEXIBLE"];
+            } else if (traits.includes("systematic") || traits.includes("organized")) {
+                return types["CALM_ANALYTICAL_INDEPENDENT_SYSTEMATIC"];
+            } else {
+                // 默认类型
+                return types["CALM_ANALYTICAL_COLLABORATIVE_SYSTEMATIC"];
+            }
+        }
+
+        function showCurrentStatus(type, scores) {
+            const container = document.getElementById('current-status');
+            
+            let statusAnalysis = "";
+            
+            if (scores.stress < scenarios.length * 2) {
+                statusAnalysis = "你现在可能正在承受较大的创业压力，这很正常，但需要引起重视。高压状态下的决策质量会下降，身心健康也会受到影响。";
+            } else if (scores.stress < scenarios.length * 2.5) {
+                statusAnalysis = "你的压力管理能力处于中等水平，大部分时候能够应对挑战，但在极端情况下可能会感到吃力。";
+            } else {
+                statusAnalysis = "你拥有出色的压力管理能力，能在高压环境下保持冷静和清晰的思考。这是创业者的珍贵品质。";
+            }
+            
+            if (scores.relation < scenarios.length * 2) {
+                statusAnalysis += " 在关系处理方面，你可能更倾向于独立解决问题，但创业是团队运动，需要更多地投入到关系建设中。";
+            } else {
+                statusAnalysis += " 你很善于处理人际关系，这将为你的创业路带来巨大优势。";
+            }
+            
+            container.innerHTML = `
+                <div class="status-title">🎯 你的当前状态画像</div>
+                <div class="status-content">${statusAnalysis}</div>
+            `;
+        }
+
+        function showDimensions(scores) {
+            const container = document.getElementById('dimensions-grid');
+            const maxScore = scenarios.length * 3;
+            
+            const dimensions = [
+                {
+                    icon: "🧘",
+                    label: "压力管理",
+                    value: Math.round((scores.stress / maxScore) * 100),
+                    desc: scores.stress >= maxScore * 0.8 ? "抗压如钢铁" : 
+                          scores.stress >= maxScore * 0.6 ? "基本能应对" : "需要减压技巧"
+                },
+                {
+                    icon: "⚡",
+                    label: "决策风格",
+                    value: Math.round((scores.decision / maxScore) * 100),
+                    desc: scores.decision >= maxScore * 0.8 ? "决策果断有力" : 
+                          scores.decision >= maxScore * 0.6 ? "思考相对周全" : "决策需要支持"
+                },
+                {
+                    icon: "🤝",
+                    label: "关系处理",
+                    value: Math.round((scores.relation / maxScore) * 100),
+                    desc: scores.relation >= maxScore * 0.8 ? "关系高手" : 
+                          scores.relation >= maxScore * 0.6 ? "合作意识强" : "偏向独立作战"
+                },
+                {
+                    icon: "🚀",
+                    label: "执行能力",
+                    value: Math.round((scores.execution / maxScore) * 100),
+                    desc: scores.execution >= maxScore * 0.8 ? "执行力爆表" : 
+                          scores.execution >= maxScore * 0.6 ? "执行力不错" : "执行需要改进"
+                }
+            ];
+
+            container.innerHTML = dimensions.map(dim => `
+                <div class="dimension-card">
+                    <span class="dimension-icon">${dim.icon}</span>
+                    <div class="dimension-label">${dim.label}</div>
+                    <div class="dimension-value">${dim.value}%</div>
+                    <div class="dimension-desc">${dim.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        function showRecommendations(type, scores) {
+            const container = document.getElementById('recommendations');
+            let recommendations = [];
+            const maxScore = scenarios.length * 3;
+            
+            // 基于测试结果提供个性化建议
+            if (scores.stress < maxScore * 0.7) {
+                recommendations.push({
+                    emoji: "🛌",
+                    title: "重建你的能量管理系统",
+                    desc: "你的压力管理需要立即优化。试试R90睡眠法：每晚保证4-6个完整的90分钟睡眠周期。睡前1小时不碰手机，创造一个让大脑自动关机的仪式。很多CEO发现，好睡眠比多工作3小时更有效。"
+                });
+                recommendations.push({
+                    emoji: "🧘",
+                    title: "学会2分钟急救法",
+                    desc: "当感到压力爆表时，试试4-7-8呼吸法：吸气4秒，憋气7秒，呼气8秒。这能瞬间激活副交感神经。马云说过，创业者必须学会在暴风雨中跳舞，而不是被暴风雨击倒。"
+                });
+            }
+            
+            if (scores.relation < maxScore * 0.7) {
+                recommendations.push({
+                    emoji: "💬",
+                    title: "掌握非暴力沟通技巧",
+                    desc: "创业路上最贵的成本是关系破裂。学会用'我感受到...'代替'你总是...'，用'我需要...'代替'你应该...'。很多创业者发现，改变沟通方式后，团队效率提升了300%。"
+                });
+                recommendations.push({
+                    emoji: "🏠",
+                    title: "建立家庭支持系统",
+                    desc: "每周安排一个完全不谈工作的家庭时间。向家人解释你的创业愿景，让他们成为你的后盾而不是负担。成功的创业者背后，都有一个理解和支持他们的家庭。"
+                });
+            }
+            
+            if (scores.decision < maxScore * 0.7) {
+                recommendations.push({
+                    emoji: "⏰",
+                    title: "建立决策框架",
+                    desc: "用30-70法则：有30%把握就开始行动，有70%把握就必须决定。重要决策设定48小时期限，避免无限纠结。记住，在创业中，不决策就是最坏的决策。"
+                });
+            }
+            
+            if (scores.execution < maxScore * 0.7) {
+                recommendations.push({
+                    emoji: "🎯",
+                    title: "采用90分钟专注法",
+                    desc: "每天选择最重要的任务，用90分钟时间块专门处理。关闭所有通知，手机放在另一个房间。很多创业者发现，一个高质量的90分钟胜过一整天的忙碌。"
+                });
+            }
+            
+            // 通用高价值建议
+            recommendations.push({
+                emoji: "🎯",
+                title: "找到你的创业节奏",
+                desc: "每个创业者都有自己的最佳工作节奏。有人是'早起鸟'，有人是'夜猫子'。找到你的黄金时段，把最重要的决策和创造性工作安排在这个时间。顺应天性比对抗天性更有效。"
+            });
+            
+            recommendations.push({
+                emoji: "🔄",
+                title: "建立反馈循环系统",
+                desc: "每周花30分钟反思：哪些决策是对的？哪些可以改进？什么让你感到压力？什么给你带来能量？持续的自我觉察是成长的第一步。很多成功的创业者都有记录和反思的习惯。"
+            });
+            
+            recommendations.push({
+                emoji: "👥",
+                title: "寻找你的创业导师圈",
+                desc: "找3-5个懂你、支持你的人：一个行业前辈、一个同路创业者、一个专业教练。定期和他们交流，获得不同角度的建议。孤独是创业者最大的敌人，而连接是最强的武器。"
+            });
+            
+            const html = recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <div class="rec-header">
+                        <span class="rec-emoji">${rec.emoji}</span>
+                        <div class="rec-title">${rec.title}</div>
+                    </div>
+                    <div class="rec-desc">${rec.desc}</div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = `<h3>🎯 你的专属成长密码</h3>${html}`;
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            answers = [];
+            scores = { stress: 0, decision: 0, relation: 0, execution: 0 };
+            traits = [];
+            
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'block';
+        }
+
+        function shareResult() {
+            const resultType = document.getElementById('result-type').textContent;
+            const resultCode = document.getElementById('result-subtitle').textContent;
+            const text = `我刚完成了创业者心理罗盘测试！我是：${resultType}(${resultCode})。这个测试超准的，你也来探索一下你的创业DNA吧！`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: '创业者心理罗盘测试',
+                    text: text,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(text + ' ' + window.location.href).then(() => {
+                    alert('✅ 结果已复制到剪贴板，快去分享给朋友们吧！');
+                });
+            }
+        }
+
+        function getPersonalGuidance() {
+            const resultType = document.getElementById('result-type').textContent;
+            const resultCode = document.getElementById('result-subtitle').textContent;
+            
+            alert(`🎉 恭喜发现你的创业DNA：${resultType}！\n\n你想要：\n• 深度解析你的测试结果？\n• 获得针对${resultCode}类型的专属成长方案？\n• 学会如何发挥你的优势、补强你的短板？\n• 1对1个性化指导，制定90天提升计划？\n\n📱 微信：[你的微信号]\n📧 邮箱：[你的邮箱]\n📞 电话：[你的电话]\n\n🚀 限时福利：\n前50名测试者可获得价值1999元的\n《${resultType}专属成长手册》！\n\n立即联系我们，开启你的创业蜕变之旅！\n\n💡 温馨提示：每种创业DNA都有独特的成功路径，关键是找到属于你的那条路！`);
+        }
+    </script>
+</body>
+</html>
